@@ -41,4 +41,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function validateCredentials(array $credentials)
+    {
+        $password = $credentials['password'];
+        return $this->hasher->check($plain, $this->password);
+    }
 }
