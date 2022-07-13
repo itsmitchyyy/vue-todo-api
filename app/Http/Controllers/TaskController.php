@@ -17,7 +17,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return TaskResource::collection(Task::all());
+        return TaskResource::collection(Task::orderByDesc('created_at')->get());
     }
 
     /**
