@@ -47,4 +47,9 @@ class User extends Authenticatable
         $password = $credentials['password'];
         return $this->hasher->check($plain, $this->password);
     }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }
