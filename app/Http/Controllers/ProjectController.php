@@ -11,14 +11,6 @@ use App\Http\Resources\ProjectResource;
 
 class ProjectController extends Controller
 {
-
-    protected ProjectService $projectServices;
-
-    public function __construct(ProjectService $projectService) {
-        $this->projectServices = $projectService;
-    }
-
-
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +18,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return ProjectResource::collection($this->projectServices->getProjects());
+        return ProjectResource::collection(Project::orderByDesc('created_at')->get());
     }
 
     /**
@@ -37,7 +29,7 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        $project = $this->projectServices->createProject($request->validated());
+        $project = Project::create($request->validated());
 
         return new ProjectResource($project);
     }
