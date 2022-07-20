@@ -18,7 +18,7 @@ class TaskController extends Controller
      */
     public function index(TaskRequest $request)
     {
-        if ($request->filled('search')) return TaskResource::collection(Task::search($request->search));
+        if ($request->filled('search')) return TaskResource::collection(Task::search($request->search)->get());
 
         return TaskResource::collection(Task::orderByDesc('created_at')->get());
     }
