@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Requests\ProjectRequest;
 use App\Services\ProjectService;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use App\Http\Resources\ProjectResource;
@@ -16,8 +17,10 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ProjectRequest $request)
     {
+        if ($request->filled('search')) return ProjectResource::collection(Project::search($request->search)->get());
+        
         return ProjectResource::collection(Project::orderByDesc('created_at')->get());
     }
 
