@@ -7,17 +7,10 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskResource;
-use App\Services\TaskService;
 use Auth;
 
 class TaskController extends Controller
 {
-    protected TaskService $taskServices;
-
-    public function __construct(TaskService $taskService) {
-        $this->taskServices = $taskService;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +18,7 @@ class TaskController extends Controller
      */
     public function index(TaskRequest $request)
     {
-        if ($request->filled('search')) return TaskResource::collection($this->taskServices->searchTask($request->search));
+        if ($request->filled('search')) return TaskResource::collection(Task::search($request->search));
 
         return TaskResource::collection(Task::orderByDesc('created_at')->get());
     }
