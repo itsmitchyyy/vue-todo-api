@@ -24,7 +24,8 @@ class ProjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'search' => 'string|nullable'
+            'search' => 'string|nullable',
+            'pageSize' => 'nullable',
         ];
     }
 }
