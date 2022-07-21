@@ -9,6 +9,7 @@ use App\Http\Requests\ProjectRequest;
 use App\Services\ProjectService;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use App\Http\Resources\ProjectResource;
+use Auth;
 
 class ProjectController extends Controller
 {
@@ -19,9 +20,12 @@ class ProjectController extends Controller
      */
     public function index(ProjectRequest $request)
     {
-        if ($request->filled('search')) return ProjectResource::collection(Project::search($request->search)->get());
+        if ($request->filled('search')) {
+            $project = Project::search($request->search)->paginate($request->pageSize ?? 10);
+            return ProjectResource::collection($project);
+        }
         
-        return ProjectResource::collection(Project::orderByDesc('created_at')->get());
+        return ProjectResource::collection(Project::orderByDesc('created_at')->paginate($request->pageSize ?? 10));
     }
 
     /**
@@ -32,7 +36,10 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        $project = Project::create($request->validated());
+        
+        $projectData = $request->safe()->merge(['user_id' => Auth::id()]);
+
+        $project = Project::create($projectData->all());
 
         return new ProjectResource($project);
     }

@@ -18,9 +18,12 @@ class TaskController extends Controller
      */
     public function index(TaskRequest $request)
     {
-        if ($request->filled('search')) return TaskResource::collection(Task::search($request->search)->get());
+        if ($request->filled('search')) {
+            $tasks = Task::search($request->search)->paginate($request->pageSize ?? 10);
+            return TaskResource::collection($tasks);
+        }
 
-        return TaskResource::collection(Task::orderByDesc('created_at')->get());
+        return TaskResource::collection(Task::orderByDesc('created_at')->paginate($request->pageSize ?? 10));
     }
 
     /**
